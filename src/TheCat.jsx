@@ -3,12 +3,18 @@ import axios from 'axios';
 
 const CatList = () => {
   const [catData, setCatData] = useState([]);
+  const voidrUrl = `https://img.voidr.co/${import.meta.env.VITE_PROJECT_NAME}/resize:300x/convert:webp/compress:80/fetch/`;
 
   useEffect(() => {
     const fetchCatData = async () => {
       try {
+        const apiUrl = 'https://api.thecatapi.com/v1/images/search';
+        const urlParameters = '?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=6';
+        const apiKey = `&api_key=${import.meta.env.VITE_API_KEY}`
+        ;
+
         const response = await axios.get(
-          'https://api.thecatapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=6&api_key=live_gaHyILBm6pvQ3Ho1vnxuTOLqfJSGGVNF0HuhD4hIpSiUWFhJq330NSOgffM9amiI'
+          apiUrl + urlParameters + apiKey
         );
         setCatData(response.data);
       } catch (error) {
@@ -31,11 +37,11 @@ const CatList = () => {
         <ul className="flex-container">
           {catData.map((cat) => (
             <li className="flex-item" key={cat.id}>
-              <img src={'https://img.voidr.co/the-cat-api/resize:300x/convert:webp/compress:80/fetch/' + cat.url} alt={cat.breeds[0].name} />
+              <img src={voidrUrl + cat.url} alt={cat.breeds[0].name} />
               <ul className='info'>
-                <li>Breed: {cat.breeds[0].name}</li>
-                <li>Origin: {cat.breeds[0].origin}</li>
-                <li>Temperament: {cat.breeds[0].temperament}</li>
+                <li className='breed'>Breed: {cat.breeds[0].name}</li>
+                <li className='origin'>Origin: {cat.breeds[0].origin}</li>
+                <li className='temperament'>{cat.breeds[0].temperament}</li>
               </ul>
             </li>
           ))}
